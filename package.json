@@ -1,0 +1,41 @@
+{
+  "name": "quadratik",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uav4geo/quadratik.git"
+  },
+  "author": "",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/uav4geo/quadratik/issues"
+  },
+  "homepage": "https://github.com/uav4geo/quadratik#readme",
+  "dependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-runtime": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/runtime": "^7.9.6",
+    "@vue/devtools": "^5.3.3",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.3",
+    "express": "^4.17.1",
+    "file-loader": "^6.0.0",
+    "manifest-revision-webpack-plugin": "^0.4.1",
+    "minimist": "^1.2.5",
+    "node-sass": "^4.14.1",
+    "sass-loader": "7.3.1",
+    "style-loader": "^1.2.1",
+    "url-loader": "^4.1.0",
+    "vue-loader": "^15.9.2",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.43.0",
+    "webpack-livereload-plugin": "^2.3.0"
+  }
+}
