@@ -1,10 +1,23 @@
-import App from './App.vue';
+import './css/main.scss';
+import Home from './Home.vue';
+import Tos from './Tos.vue';
+import HowItWorks from './HowItWorks.vue';
+
 
 window.addEventListener('DOMContentLoaded', () => {
-    new Vue({
-        el: '#app',
-        render: h => h(App)
+    const routes = [
+        { path: '/', component: Home },
+        { path: '/tos', component: Tos },
+        { path: '/howitworks', component: HowItWorks }
+    ];
+
+    const router = new VueRouter({
+        routes // short for `routes: routes`
     });
+
+    new Vue({
+        router
+    }).$mount("#app")
 
     if (window.location.href.indexOf("localhost") !== -1 ||
         window.location.href.indexOf("192.168.") !== -1 ||

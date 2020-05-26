@@ -1,4 +1,5 @@
 const express = require('express');
+const db = require('./libs/db');
 const app = express();
 const argv = require('minimist')(process.argv.slice(2), {
     'default': {
@@ -13,6 +14,9 @@ const argv = require('minimist')(process.argv.slice(2), {
 const { port, host } = argv;
 
 app.use(express.static('public'));
-app.get('/hello', (req, res) => res.send('Hello World!'));
+
+app.get('/r/funding/list', (req, res) => {
+    res.json(db.funding.list());
+});
 
 app.listen(port, host, () => console.log(`Server listening on http://${host}:${port}`))

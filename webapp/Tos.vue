@@ -1,14 +1,11 @@
 <template>
-<div id="app">
-    Test!
+<div id="tos">
+    Terms of Service
 </div>
 </template>
 
 <script>
 export default {
-//   components: {
-//     Toolbar, Map, FileBrowser, Explorer, Properties
-//   },
   data: function(){
       return {
       }
@@ -20,6 +17,6 @@ export default {
 </script>
 
 <style scoped>
-#app{
+#tos{
 }
 </style>
