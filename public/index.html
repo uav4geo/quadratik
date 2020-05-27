@@ -4,17 +4,18 @@
 	<meta charset="UTF-8">
 	<title>Quadratik</title>
     <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+    
 </head>
 <body>
     <div id="app">
         <div class="ui borderless main menu">
           <div class="ui text container">
-            <div class="header item">
-              <img class="logo" src="assets/images/logo.png">
-              Project Name
+            <div class="header" style="height: 40px; margin-left: 5px; margin-top: 5px; margin-right: 12px;">
+              <router-link to="/"><img class="logo" style="height: 40px;" src="https://community.opendronemap.org/uploads/default/original/2X/e/e7ca88b9fb6e7de4509be009b48dd71b60bb5bd2.png"></router-link>
             </div>
-            <a href="#" class="item">Blog</a>
-            <a href="#" class="item">Articles</a>
+
+            <router-link exact="true" active-class="active" to="/" class="item">Funding</router-link>
+            <router-link active-class="active" to="/howitworks" class="item">How It Works</router-link>
             
           </div>
         </div>
