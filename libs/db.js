@@ -1,18 +1,35 @@
+const PouchDB = require('pouchdb');
+const DataPouchDB = PouchDB.defaults({prefix: 'data/'});
+const pouchRouter = require('express-pouchdb');
+
+let funds = null;
+
+const setReadOnly = async db => {
+    try{
+        await db.get('_design/auth');
+    }catch(_){
+        console.log(`Setting ${db.name} to read only`);
+        await db.put({
+            _id: '_design/auth',
+            language: "javascript",
+            validate_doc_update: `
+            function(newDoc, oldDoc, userCtx) { 
+                if (userCtx.roles.indexOf('_admin') === -1) { 
+                    throw ({ forbidden: 'Forbidden' }); 
+                }
+            }
+            `.replace("\n", "")
+        });
+    }
+}
 
 module.exports = {
-    funding: {
-        list: () => {
-            return [
-                {
-                    id: 991,
-                    title: "[Feature Request] Parallelize odm_filterpoints",
-                    url: "https://github.com/OpenDroneMap/ODM/issues/991",
-                    description: "Parallelize odm_filterpoints to reduce the bottleneck at this stage in the process.",
-                    pledges: [
-                    ],
-                    goal: 4800
-                }
-            ];
-        }
+    initialize: async app => {
+        const pouchHandle = pouchRouter(DataPouchDB);
+        funds = new DataPouchDB('funds');
+
+        await setReadOnly(funds);
+
+        app.use("/", pouchHandle);
     }
 }
