@@ -1,7 +1,9 @@
 <template>
 <div id="home">
-    <message bindTo="error" className="warning" />
-    
+    <Message bindTo="error" className="warning" />
+
+    <SubsidyCalculator v-if="showCalculator" :fund="selectedFund" @onClose="closeCalculator" />
+
     <div v-if="loading" class="text-center">
         <i class="circle notch icon loading"></i>
     </div>
@@ -67,7 +69,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div><a href="#"><i class="icon users" data-position="top center" data-content="Number of people who pledged"></i> {{ fund.pledges.length }}</a></div>
+                                        <div><a href="#"><i class="icon users" data-position="top center" data-content="People who pledged"></i> {{ fund.pledges.length }}</a></div>
                                     </td>
                                 </tr>
                                 <tr v-if="fund.sponsor_name">
@@ -84,7 +86,7 @@
                             </table>
 
                             <div class="ui buttons">
-                                <button class="ui button"><i class="icon calculator"></i> Calculate Subsidy</button>
+                                <button class="ui button" @click="openCalculator(fund)"><i class="icon calculator"></i> Calculate Subsidy</button>
                             <div class="or"></div>
                                 <button class="ui button primary"><i class="icon dollar"></i> Pledge</button>
                             </div>
@@ -102,21 +104,19 @@ import $ from 'jquery';
 import Message from './Message.vue';
 import Markdown from './Markdown.vue';
 import Fund from './libs/fund';
-
-function updateCountdown(fund){
-
-}
-
+import SubsidyCalculator from './SubsidyCalculator.vue';
 
 export default {
   components: {
-    Message, Markdown
+    Message, Markdown, SubsidyCalculator
   },
   data: function(){
       return {
           loading: true,
           error: "",
-          funds: []
+          funds: [],
+          selectedFund: null,
+          showCalculator: false,
       }
   },
   updated: function(){
@@ -142,6 +142,14 @@ export default {
       if (this.updateExpirations) clearInterval(this.updateExpirations);
   },
   methods: {
+      openCalculator: function(fund){
+          this.selectedFund = fund;
+          this.showCalculator = true;
+      },
+
+      closeCalculator: function(){
+          this.showCalculator = false;
+      }
   }
 }
 </script>
