@@ -19,12 +19,12 @@
             <div class="item">
                 <div class="ui grid">
                     <div class="nine wide column">
-                        <a class="header">
+                        <a class="header" :href="fund.url" target="_blank">
                             <i class="large github icon"></i>
                             {{ fund.title }}
                         </a>
                         <div class="description">
-                            {{ fund.description }}
+                            <Markdown>{{ fund.description }}</Markdown>
                         </div>
                     </div>
                     <div class="seven wide column text-center">
@@ -46,7 +46,11 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <div><i class="icon clock" data-position="top center" data-content="Time Left"></i> 30d 05:60:56</div>
+                                        <div>
+                                            <i class="icon clock" data-position="top center" data-content="Time Left"></i> 
+                                            <span v-if="fund.countdown">{{fund.countdown.days}}d {{fund.countdown.hours}}h {{fund.countdown.minutes}}m {{fund.countdown.seconds}}s</span>
+                                            <span v-else>No time limit</span>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -59,14 +63,14 @@
                                         <div><a href="#"><i class="icon users" data-position="top center" data-content="Number of people who pledged"></i> 4</a></div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr v-if="fund.sponsor_name">
                                     <td>
-                                        <div><i class="icon heart" data-position="top center" data-content="Subsidy Pool Sponsor"></i> <a href="#">UAV4GEO</a></div>
+                                        <div><i class="icon heart" data-position="top center" data-content="Subsidy Pool Sponsor"></i> <a :href="fund.sponsor_url" target="_blank">{{ fund.sponsor_name }}</a></div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr v-if="fund.developer_name">
                                     <td>
-                                        <div><i class="icon wrench" data-position="top center" data-content="Developer"></i> UAV4GEO</div>
+                                        <div><i class="icon wrench" data-position="top center" data-content="Developer"></i> <a :href="fund.developer_url" target="_blank">{{ fund.developer_name }}</a></div>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -88,10 +92,30 @@
 <script>
 import $ from 'jquery';
 import Message from './Message.vue';
+import Markdown from './Markdown.vue';
+
+function updateCountdown(fund){
+    if (!fund.expires) return;
+    if (fund.expires && !fund.countdown) fund.countdown = {};
+
+    // Get today's date and time
+    const now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    const distance = new Date(fund.expires) - now;
+
+    // Time calculations for days, hours, minutes and seconds
+    fund.countdown.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    fund.countdown.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    fund.countdown.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    fund.countdown.seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    fund.countdown.done = distance < 0;
+}
 
 export default {
   components: {
-    Message
+    Message, Markdown
   },
   data: function(){
       return {
@@ -101,13 +125,32 @@ export default {
       }
   },
   updated: function(){
-      $(this.$refs.funding_progress).progress();
-      $('[data-content]').popup({inline: true});
+      if (!this._ui_updated){
+        $(this.$refs.funding_progress).progress();
+        $('[data-content]').popup({inline: true});
+        this._ui_updated = true;
+      }
   },
   created: function(){
-      $.getJSON("/funds/_all_docs?include_docs=true&endkey=_design", res => {
-          this.funds = res.rows.map(r => r.doc);
-          console.log(this.funds);
+
+      $.getJSON("/r/funds", res => {
+          let hasExpiry = false;
+          res.forEach(fund => {
+              if (fund.expires){
+                updateCountdown(fund);
+                hasExpiry = true;
+              }
+          });
+
+          if (hasExpiry){
+              setInterval(() => {
+                    res.forEach(fund => {
+                        updateCountdown(fund);
+                    });
+              }, 1000);
+          }
+
+          this.funds = res;
       }).fail(e => { this.error = `Cannot load fund list: ${e.statusText}. Try again later.`})
         .always(() => { this.loading = false });
   },
