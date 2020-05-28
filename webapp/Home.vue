@@ -119,12 +119,12 @@ export default {
           showCalculator: false,
       }
   },
-  updated: function(){
-      if (!this._ui_updated){
-        $(this.$refs.funding_progress).progress();
-        $('[data-content]').popup({inline: true});
-        this._ui_updated = true;
-      }
+  mounted: function(){
+        setTimeout(() => {
+            $(this.$refs.funding_progress).progress();
+            $(this.$el).find('[data-content]').popup({inline: true});
+        }, 0);
+      this.openCalculator();
   },
   created: function(){
 
@@ -138,6 +138,9 @@ export default {
       }).fail(e => { this.error = `Cannot load fund list: ${e.statusText}. Try again later.`})
         .always(() => { this.loading = false });
   },
+
+//   mounted: function(){
+//   },
   destroyed: function(){
       if (this.updateExpirations) clearInterval(this.updateExpirations);
   },
