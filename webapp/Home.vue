@@ -29,17 +29,17 @@
                     </div>
                     <div class="seven wide column text-center">
                             <div class="ui primary button large" data-position="top center" data-content="Funded by community">
-                                ${{ communityFundAmount(fund) }}
+                                ${{ fund.communityFundAmount() }}
                             </div> <i class="icon plus"></i>
                             <div class="ui green button large" data-position="top center" data-content="Funded by subsidy pool">
-                                $150
+                                ${{ fund.poolFundAmount() }}
                             </div>
                             <hr/>
-                            <div class="total">$200</div>
+                            <div class="total">${{ fund.totalFundAmount() }}</div>
                             
-                            <div class="ui progress green" data-percent="74" ref="funding_progress">
+                            <div class="ui progress green" :data-percent="Math.min(100, fund.percentageFunded())" ref="funding_progress">
                                 <div class="bar"></div>
-                                <div class="label">74% funded</div>
+                                <div class="label">{{ fund.percentageFunded() }}% funded</div>
                             </div>
 
                             <table class="ui very basic celled table">
@@ -47,9 +47,12 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <i class="icon clock" data-position="top center" data-content="Time Left"></i> 
-                                            <span v-if="fund.countdown">{{fund.countdown.days}}d {{fund.countdown.hours}}h {{fund.countdown.minutes}}m {{fund.countdown.seconds}}s</span>
-                                            <span v-else>No time limit</span>
+                                            <i class="icon clock" data-position="top center" data-content="Time Left"></i>
+                                            <span v-if="!fund.timesup()">
+                                                <span v-if="fund.countdown">{{fund.countdown.days}}d {{fund.countdown.hours}}h {{fund.countdown.minutes}}m {{fund.countdown.seconds}}s</span>
+                                                <span v-else>No time limit</span>
+                                            </span>
+                                            <span v-else>-</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -62,7 +65,7 @@
                                     <td>
                                         <div>
                                             <i class="icon balance scale" data-position="top center" data-content="Type of Funding"></i> 
-                                            <span data-position="top center" :data-content="fundingTypeDescription(fund.funding_type)">{{ fundingTypeToHuman(fund.funding_type) }}</span>
+                                            <span data-position="top center" :data-content="fund.typeDescription()">{{ fund.typeLabel() }}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -102,6 +105,7 @@
 import $ from 'jquery';
 import Message from './Message.vue';
 import Markdown from './Markdown.vue';
+import Fund from './libs/fund';
 
 function updateCountdown(fund){
     if (!fund.expires) return;
@@ -122,12 +126,6 @@ function updateCountdown(fund){
     fund.countdown.done = distance < 0;
 }
 
-const fundingTypes = {
-    1: {
-        label: "All or Nothing",
-        description: "If we don't reach the funding goal within the designated timeline, the developer won't receive any of the funds that were pledged and people will not be charged."
-    }
-}
 
 export default {
   components: {
@@ -150,8 +148,10 @@ export default {
   created: function(){
 
       $.getJSON("/r/funds", res => {
+          this.funds = res.map(f => new Fund(f));
+
           let hasExpiry = false;
-          res.forEach(fund => {
+          this.funds.forEach(fund => {
               if (fund.expires){
                 updateCountdown(fund);
                 hasExpiry = true;
@@ -160,38 +160,15 @@ export default {
 
           if (hasExpiry){
               setInterval(() => {
-                    res.forEach(fund => {
+                    this.funds.forEach(fund => {
                         updateCountdown(fund);
                     });
               }, 1000);
           }
-
-          this.funds = res;
       }).fail(e => { this.error = `Cannot load fund list: ${e.statusText}. Try again later.`})
         .always(() => { this.loading = false });
   },
   methods: {
-    fundingTypeToHuman: function(type){
-        return fundingTypes[type].label;
-    },
-
-    fundingTypeDescription: function(type){
-        return fundingTypes[type].description;
-    },
-
-    communityFundAmount: function(fund){
-        return fund.pledges.reduce((acc, p) => acc += p.amount, 0);
-    },
-
-    poolFundAmount: function(fund){
-        const { pledges } = fund;
-        
-    },
-
-    percentageFunded: function(fund){
-        const { goal, pledges } = fund;
-
-    }
   }
 }
 </script>

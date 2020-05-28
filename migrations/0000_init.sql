@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS "funds" (
 	"sponsor_url"	TEXT,
 	"developer_name"	TEXT,
 	"developer_url"	TEXT,
-    "funding_type"	INTEGER DEFAULT 1
+    "type"	INTEGER DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS "pledges" (
