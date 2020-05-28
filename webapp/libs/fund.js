@@ -1,7 +1,7 @@
 const FundingTypes = {
     1: {
         label: "All or Nothing",
-        description: "If we don't reach the funding goal within the designated timeline, the developer won't receive any of the funds that were pledged and people will not be charged."
+        description: "If we don't reach the funding goal within the designated timeline, the developer won't receive any of the funds that are pledged and people will not be charged."
     }
 };
 
@@ -46,6 +46,25 @@ class Fund{
 
     fundingGoalAchieved(){
         return this.totalFundAmount() >= this.goal;
+    }
+
+    getCountdown(){
+        if (!this.expires) return "No time limit";
+        if (this.timesup()) return "-";
+    
+        // Get today's date and time
+        const now = new Date().getTime();
+    
+        // Find the distance between now and the count down date
+        const distance = new Date(this.expires) - now;
+    
+        // Time calculations for days, hours, minutes and seconds
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+        return `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 }
 

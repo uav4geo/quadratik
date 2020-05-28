@@ -48,11 +48,7 @@
                                     <td>
                                         <div>
                                             <i class="icon clock" data-position="top center" data-content="Time Left"></i>
-                                            <span v-if="!fund.timesup()">
-                                                <span v-if="fund.countdown">{{fund.countdown.days}}d {{fund.countdown.hours}}h {{fund.countdown.minutes}}m {{fund.countdown.seconds}}s</span>
-                                                <span v-else>No time limit</span>
-                                            </span>
-                                            <span v-else>-</span>
+                                            {{ fund.getCountdown() }}
                                         </div>
                                     </td>
                                 </tr>
@@ -108,22 +104,7 @@ import Markdown from './Markdown.vue';
 import Fund from './libs/fund';
 
 function updateCountdown(fund){
-    if (!fund.expires) return;
-    if (fund.expires && !fund.countdown) fund.countdown = {};
 
-    // Get today's date and time
-    const now = new Date().getTime();
-
-    // Find the distance between now and the count down date
-    const distance = new Date(fund.expires) - now;
-
-    // Time calculations for days, hours, minutes and seconds
-    fund.countdown.days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    fund.countdown.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    fund.countdown.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    fund.countdown.seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    fund.countdown.done = distance < 0;
 }
 
 
@@ -150,23 +131,15 @@ export default {
       $.getJSON("/r/funds", res => {
           this.funds = res.map(f => new Fund(f));
 
-          let hasExpiry = false;
-          this.funds.forEach(fund => {
-              if (fund.expires){
-                updateCountdown(fund);
-                hasExpiry = true;
-              }
-          });
-
+          let hasExpiry = this.funds.find(f => f.expires) !== undefined;
           if (hasExpiry){
-              setInterval(() => {
-                    this.funds.forEach(fund => {
-                        updateCountdown(fund);
-                    });
-              }, 1000);
+              this.updateExpirations = setInterval(() => this.$forceUpdate(), 1000);
           }
       }).fail(e => { this.error = `Cannot load fund list: ${e.statusText}. Try again later.`})
         .always(() => { this.loading = false });
+  },
+  destroyed: function(){
+      if (this.updateExpirations) clearInterval(this.updateExpirations);
   },
   methods: {
   }
