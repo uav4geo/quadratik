@@ -8,5 +8,18 @@ CREATE TABLE IF NOT EXISTS "funds" (
     "sponsor_name"	TEXT,
 	"sponsor_url"	TEXT,
 	"developer_name"	TEXT,
-	"developer_url"	TEXT
+	"developer_url"	TEXT,
+    "funding_type"	INTEGER DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS "pledges" (
+	"id"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"amount"	REAL NOT NULL,
+	"name"	TEXT DEFAULT "",
+	"email"	TEXT DEFAULT "",
+    "fund_id"	INTEGER NOT NULL
+);
+
+CREATE INDEX "fund_id_fk" ON "pledges" (
+	"fund_id"
 );

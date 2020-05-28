@@ -17,7 +17,7 @@
         </div>
         <div v-for="fund in funds" class="ui relaxed divided list">
             <div class="item">
-                <div class="ui grid">
+                <div class="ui grid stackable">
                     <div class="nine wide column">
                         <a class="header" :href="fund.url" target="_blank">
                             <i class="large github icon"></i>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="seven wide column text-center">
                             <div class="ui primary button large" data-position="top center" data-content="Funded by community">
-                                $50
+                                ${{ communityFundAmount(fund) }}
                             </div> <i class="icon plus"></i>
                             <div class="ui green button large" data-position="top center" data-content="Funded by subsidy pool">
                                 $150
@@ -60,7 +60,15 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div><a href="#"><i class="icon users" data-position="top center" data-content="Number of people who pledged"></i> 4</a></div>
+                                        <div>
+                                            <i class="icon balance scale" data-position="top center" data-content="Type of Funding"></i> 
+                                            <span data-position="top center" :data-content="fundingTypeDescription(fund.funding_type)">{{ fundingTypeToHuman(fund.funding_type) }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div><a href="#"><i class="icon users" data-position="top center" data-content="Number of people who pledged"></i> {{ fund.pledges.length }}</a></div>
                                     </td>
                                 </tr>
                                 <tr v-if="fund.sponsor_name">
@@ -84,6 +92,7 @@
                     </div>
                 </div>
             </div>
+            <hr/>
         </div>
     </div>
 </div>
@@ -111,6 +120,13 @@ function updateCountdown(fund){
     fund.countdown.seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     fund.countdown.done = distance < 0;
+}
+
+const fundingTypes = {
+    1: {
+        label: "All or Nothing",
+        description: "If we don't reach the funding goal within the designated timeline, the developer won't receive any of the funds that were pledged and people will not be charged."
+    }
 }
 
 export default {
@@ -155,7 +171,27 @@ export default {
         .always(() => { this.loading = false });
   },
   methods: {
-      
+    fundingTypeToHuman: function(type){
+        return fundingTypes[type].label;
+    },
+
+    fundingTypeDescription: function(type){
+        return fundingTypes[type].description;
+    },
+
+    communityFundAmount: function(fund){
+        return fund.pledges.reduce((acc, p) => acc += p.amount, 0);
+    },
+
+    poolFundAmount: function(fund){
+        const { pledges } = fund;
+        
+    },
+
+    percentageFunded: function(fund){
+        const { goal, pledges } = fund;
+
+    }
   }
 }
 </script>

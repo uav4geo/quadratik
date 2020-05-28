@@ -29,8 +29,16 @@ module.exports = {
 
     mountRest: function(app){
         app.get("/r/funds", (req, res) => {
-            console.log(db.prepare("SELECT * FROM funds").all());
-            res.json(db.prepare("SELECT * FROM funds").all());
+            res.json(db.prepare(`
+            SELECT f.*,
+            CASE COUNT(p.id)
+                WHEN 0 THEN json_array()
+                ELSE json_group_array(json_object('amount', p.amount, 'name', p.name))
+            END as pledges
+            FROM funds f
+            LEFT OUTER JOIN pledges p
+            ON p.fund_id = f.id
+            GROUP BY f.id`).all().map(r => (r.pledges = JSON.parse(r.pledges), r)));
         });
     }
 }
