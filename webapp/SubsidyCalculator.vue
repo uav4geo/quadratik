@@ -6,33 +6,52 @@
     <div class="content">
         <div class="ui grid stackable">
             <div class="eight wide column">
-                <h3>Amount <span v-if="users == 1">You</span><span v-else>{{ users }} people</span> Pledge</h3>
-                <div class="ui basic buttons">
-                    <template v-for="amt in amounts">
-                    <button class="ui button" :class="{active: selectedAmount == amt}">{{amt}}</button>
-                    </template>
-                </div>
-
-                <div v-if="selectedAmount == 'custom'">
-                    <div class="ui clearing divider"></div>
-                    <div class="ui labeled input">
-                        <label for="amount" class="ui label">$</label>
-                        <input type="text" placeholder="0" v-model="userFund" size="5" @keypress="isNumber($event)">
-                    </div>
-                </div>
+                <PledgeAmountSelector 
+                    title="Amount You Pledge" 
+                    :amounts="[10, 25, 50, 100]" 
+                    defaultAmount="25"
+                    @onChange="(v) => this.userFund = v" />
             
                 <h3>Total Value</h3>
-                <a class="ui blue label large"
-                    data-position="top center" data-content="Funded by you">${{ (userFund * users).toLocaleString() }}</a>
-                <i class="icon plus"></i>
-                <a class="ui green label large"
-                    data-position="top center" data-content="Funded by subsidy pool">${{ poolFund.toLocaleString() }}</a>
-                <i class="icon arrow right"></i>
                 <a class="ui teal label large"
-                    data-position="top center" data-content="Total value of your contribution">${{ ((userFund * users) + poolFund).toLocaleString() }}</a>
+                    data-position="top center" data-content="Total value of your pledge">${{ totalPledgeValue.toLocaleString()}}</a>
             </div>
             <div class="eight wide column">
-
+                <table class="ui celled table">
+                <thead>
+                    <tr>
+                    <th>Current Funding</th>
+                    <th>${{ fund.totalFundAmount().toLocaleString() }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td>
+                    <div class="ui icon buttons mini basic add-users">
+                        <button class="ui button"  @click="addUsers(-1)" :disabled="users <= 1">
+                            <i class="minus icon"></i>
+                        </button> 
+                        <button class="ui button" @click="addUsers(1)">
+                            <i class="plus icon" ></i>
+                        </button>
+                    </div> {{ numPeople }} pledging ${{ userFund }}
+                    </td>
+                    <td><span class="ui label blue">${{ (userFund * users).toLocaleString() }}</span></td>
+                    </tr>
+                    <tr>
+                    <td>Subsidy Pool Contribution</td>
+                    <td><span class="ui label green">${{ poolFundAmount }}</span></td>
+                    </tr>
+                    <tr>
+                    <td>Total value of your pledge<span v-if="users > 1">s</span></td>
+                    <td><span class="ui label teal">${{ totalPledgeValue.toLocaleString()}}</span></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr><th><strong>New Total Funding</strong></th>
+                    <th><strong>${{ (fund.totalFundAmount() + (userFund * users) + poolFundAmount).toLocaleString() }}</strong></th>
+                </tr></tfoot>
+                </table>
             </div>
         </div>
     </div>
@@ -46,11 +65,12 @@
 
 <script>
 import Modal from './Modal.vue';
+import PledgeAmountSelector from './PledgeAmountSelector.vue';
 
 export default {
   props: ['fund'],
   components: {
-      Modal
+      Modal, PledgeAmountSelector
   },
   data: function(){
       return {
@@ -59,30 +79,44 @@ export default {
           ],
           selectedAmount: "$25",
           userFund: 25,
-          users: 1,
-          poolFund: 0
+          users: 1
       }
   },
   mounted: function(){
-        setTimeout(() => {
+        this.$nextTick(() => {
             $(this.$el).find('[data-content]').popup({inline: true});
-        }, 0);
+        });
+  },
+  computed: {
+      numPeople: function(){
+          if (this.users === 1) return "1 person";
+          else return `${this.users} people`;
+      },
+
+      poolFundAmount: function(){
+          return this.fund.poolFundAmountIf(this.users, this.userFund) - this.fund.poolFundAmount();
+      },
+
+      totalPledgeValue: function(){
+          return this.userFund * this.users + this.poolFundAmount;
+      }
   },
   methods: {
-    isNumber: function(evt) {
-      evt = (evt) ? evt : window.event;
-      var charCode = (evt.which) ? evt.which : evt.keyCode;
-      if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-        evt.preventDefault();;
-      } else {
-        return true;
+      addUsers: function(n){
+          this.users += n;
+          if (this.users < 1) this.users = 1;
       }
-    }
   }
 }
 </script>
 
 <style scoped>
+.add-users{
+    margin-right: 6px;
+}
+table{
+    user-select: none;
+}
 .label.large{
     font-size: 150%;
 }

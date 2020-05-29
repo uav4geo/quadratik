@@ -8,7 +8,6 @@ const FundingTypes = {
 class Fund{
     constructor(fundJson){
         Object.assign(this, fundJson);
-        console.log(fundJson);
     }
 
     typeLabel(){
@@ -27,6 +26,13 @@ class Fund{
         const sumOfSqrt = this.pledges.reduce((acc, p) => acc += Math.sqrt(p.amount), 0);
         const sumOfSqrt2 = sumOfSqrt * sumOfSqrt;
         return Math.round(sumOfSqrt2 - this.communityFundAmount());
+    }
+
+    poolFundAmountIf(newUsers, pledgeAmount){
+        const sumOfSqrt = this.pledges.reduce((acc, p) => acc += Math.sqrt(p.amount), 0) +
+                          Math.sqrt(pledgeAmount) * newUsers;
+        const sumOfSqrt2 = sumOfSqrt * sumOfSqrt;
+        return Math.round(sumOfSqrt2 - (this.communityFundAmount() + (newUsers * pledgeAmount)));
     }
 
     totalFundAmount(){

@@ -120,27 +120,25 @@ export default {
       }
   },
   mounted: function(){
-        setTimeout(() => {
-            $(this.$refs.funding_progress).progress();
-            $(this.$el).find('[data-content]').popup({inline: true});
-        }, 0);
-      this.openCalculator();
-  },
-  created: function(){
-
       $.getJSON("/r/funds", res => {
           this.funds = res.map(f => new Fund(f));
+        //   this.openCalculator(this.funds[0]);
 
           let hasExpiry = this.funds.find(f => f.expires) !== undefined;
           if (hasExpiry){
               this.updateExpirations = setInterval(() => this.$forceUpdate(), 1000);
           }
+
+          this.$nextTick(() => {
+             this.$nextTick(() => {
+                $(this.$refs.funding_progress).progress();
+                $(this.$el).find('[data-content]').popup({inline: true});
+             })
+           });
       }).fail(e => { this.error = `Cannot load fund list: ${e.statusText}. Try again later.`})
         .always(() => { this.loading = false });
   },
 
-//   mounted: function(){
-//   },
   destroyed: function(){
       if (this.updateExpirations) clearInterval(this.updateExpirations);
   },
