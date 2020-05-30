@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('./libs/db');
+const payment = require('./libs/payment');
 const app = express();
 
 const argv = require('minimist')(process.argv.slice(2), {
@@ -15,7 +16,7 @@ const argv = require('minimist')(process.argv.slice(2), {
 const { port, host } = argv;
 
 app.use(express.static('public'));
+app.use('/r', db.api);
+app.use('/r', payment.api);
 
-db.initialize(app).then(() => {
-    app.listen(port, host, () => console.log(`Server listening on http://${host}:${port}`))
-}).catch(console.error);
+app.listen(port, host, () => console.log(`Server listening on http://${host}:${port}`))

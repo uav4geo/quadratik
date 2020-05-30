@@ -20,6 +20,12 @@ CREATE TABLE IF NOT EXISTS "pledges" (
     "fund_id"	INTEGER NOT NULL
 );
 
-CREATE INDEX "fund_id_fk" ON "pledges" (
+CREATE INDEX IF NOT EXISTS "fund_id_fk" ON "pledges" (
 	"fund_id"
+);
+
+CREATE TABLE IF NOT EXISTS "config" (
+	"key"	TEXT,
+	"value"	TEXT,
+	PRIMARY KEY("key")
 );

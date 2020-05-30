@@ -39,8 +39,8 @@
                     <td><span class="ui label blue">${{ (userFund * users).toLocaleString() }}</span></td>
                     </tr>
                     <tr>
-                    <td>Subsidy Pool Contribution</td>
-                    <td><span class="ui label green">${{ poolFundAmount }}</span></td>
+                    <td>Subsidy pool contribution</td>
+                    <td><span class="ui label green">${{ poolFundAmount.toLocaleString() }}</span></td>
                     </tr>
                     <tr>
                     <td>Total value of your pledge<span v-if="users > 1">s</span></td>
