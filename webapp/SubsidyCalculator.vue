@@ -3,7 +3,7 @@
     <div class="header">
         Calculate Subsidy
     </div>
-    <div class="content">
+    <div class="content scrolling">
         <div class="ui grid stackable">
             <div class="eight wide column">
                 <PledgeAmountSelector 
@@ -57,7 +57,7 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui ok primary right button">
+        <div class="ui ok primary right button large">
         Close
         </div>
     </div>

@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui ok primary right button">
+        <div class="ui ok primary right button large">
         Close
         </div>
     </div>

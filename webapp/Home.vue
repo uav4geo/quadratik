@@ -129,6 +129,7 @@ export default {
       $.getJSON("/r/funds", res => {
           this.funds = res.map(f => new Fund(f));
         //   this.openCalculator(this.funds[0]);
+        this.openCheckout(this.funds[0]);
 
           let hasExpiry = this.funds.find(f => f.expires) !== undefined;
           if (hasExpiry){
