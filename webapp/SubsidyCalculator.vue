@@ -10,6 +10,7 @@
                     title="Amount You Pledge" 
                     :amounts="[10, 25, 50, 100]" 
                     defaultAmount="25"
+                    minimumAmount="10"
                     @onChange="(v) => this.userFund = v" />
             
                 <h3>Total Value</h3>
@@ -56,7 +57,7 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui positive right button">
+        <div class="ui ok primary right button">
         Close
         </div>
     </div>
@@ -74,10 +75,6 @@ export default {
   },
   data: function(){
       return {
-          amounts: [
-              "$10", "$25", "$50", "$100", "Custom"
-          ],
-          selectedAmount: "$25",
           userFund: 25,
           users: 1
       }

@@ -3,6 +3,8 @@
     <Message bindTo="error" className="warning" />
 
     <SubsidyCalculator v-if="showCalculator" :fund="selectedFund" @onClose="closeCalculator" />
+    <PledgeCheckout v-if="showCheckout" :fund="selectedFund" @onClose="closeCheckout" />
+    <PledgeList v-if="showPledgeList" :fund="selectedFund" @onClose="closePledgeList" />
 
     <div v-if="loading" class="text-center">
         <i class="circle notch icon loading"></i>
@@ -69,7 +71,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div><a href="#"><i class="icon users" data-position="top center" data-content="People who pledged"></i> {{ fund.pledges.length }}</a></div>
+                                        <div><a href="javascript:void(0)" @click="openPledgeList(fund)"><i class="icon users" data-position="top center" data-content="People who pledged"></i> {{ fund.pledges.length }}</a></div>
                                     </td>
                                 </tr>
                                 <tr v-if="fund.sponsor_name">
@@ -88,7 +90,7 @@
                             <div class="ui buttons">
                                 <button class="ui button" @click="openCalculator(fund)"><i class="icon calculator"></i> Calculate Subsidy</button>
                             <div class="or"></div>
-                                <button class="ui button primary"><i class="icon dollar"></i> Pledge</button>
+                                <button class="ui button primary" @click="openCheckout(fund)"><i class="icon dollar"></i> Pledge</button>
                             </div>
                     </div>
                 </div>
@@ -105,10 +107,12 @@ import Message from './Message.vue';
 import Markdown from './Markdown.vue';
 import Fund from './libs/fund';
 import SubsidyCalculator from './SubsidyCalculator.vue';
+import PledgeCheckout from './PledgeCheckout.vue';
+import PledgeList from './PledgeList.vue';
 
 export default {
   components: {
-    Message, Markdown, SubsidyCalculator
+    Message, Markdown, SubsidyCalculator, PledgeCheckout, PledgeList
   },
   data: function(){
       return {
@@ -117,6 +121,8 @@ export default {
           funds: [],
           selectedFund: null,
           showCalculator: false,
+          showCheckout: false,
+          showPledgeList: false
       }
   },
   mounted: function(){
@@ -150,6 +156,24 @@ export default {
 
       closeCalculator: function(){
           this.showCalculator = false;
+      },
+
+      openCheckout: function(fund){
+          this.selectedFund = fund;
+          this.showCheckout = true;
+      },
+
+      closeCheckout: function(){
+          this.showCheckout = false;
+      },
+
+      openPledgeList: function(fund){
+          this.selectedFund = fund;
+          this.showPledgeList = true;
+      },
+
+      closePledgeList: function(){
+          this.showPledgeList = false;
       }
   }
 }

@@ -14,13 +14,14 @@
             <label for="amount" class="ui label">$</label>
             <input type="text" placeholder="0" v-model="selectedAmount" size="5" @keypress="isNumber($event)">
         </div>
+        <span class="ui yellow message tiny" v-if="!meetsMinimum()">Minimum is ${{ minimumAmount }}</span>
     </div>
 </div>
 </template>
 
 <script>
 export default {
-  props: ['title', 'amounts', 'defaultAmount'],
+  props: ['title', 'amounts', 'defaultAmount', 'minimumAmount'],
   data: function(){
       return {
           selectedAmount: this.defaultAmount,
@@ -43,10 +44,15 @@ export default {
       }
     },
 
+    meetsMinimum: function(){
+        return this.selectedAmount >= parseFloat(this.minimumAmount);
+    }
   },
   watch: {
       selectedAmount: function(){
-          this.$emit("onChange", this.selectedAmount || 0);
+          if (this.meetsMinimum()){
+             this.$emit("onChange", this.selectedAmount || 0);
+          }
       }
   }
 }
