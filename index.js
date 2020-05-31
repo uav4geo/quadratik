@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('./libs/db');
 const payment = require('./libs/payment');
+const bodyParser = require('body-parser');
 const app = express();
 
 const argv = require('minimist')(process.argv.slice(2), {
@@ -15,6 +16,8 @@ const argv = require('minimist')(process.argv.slice(2), {
 });
 const { port, host } = argv;
 
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use('/r', db.api);
 app.use('/r', payment.api);

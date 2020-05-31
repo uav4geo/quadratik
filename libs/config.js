@@ -9,8 +9,10 @@ module.exports = {
         return this.get("is_live") !== "true";
     },
 
-    getStripeKey(){
-        if (this.isTestMode()) return this.get('stripe_test_key');
-        else return this.get('stripe_live_key');
+    getStripeKeys(){
+        let type = this.isTestMode() ? 'test' : 'live';
+        return db.fetchOne(`SELECT a.value AS secret_key, b.value as publishable_key FROM config a 
+                            JOIN config b
+                            WHERE a.key = 'stripe_${type}_secret_key' AND b.key='stripe_${type}_publishable_key'`);
     }
 }

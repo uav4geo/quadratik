@@ -1,7 +1,7 @@
 <template>
-<div v-if="$parent[bindTo]" class="ui warning message" :class="className">
+<div v-if="$parent[bindTo] || content" class="ui warning message" :class="className">
   <i class="close icon"  @click="dismiss"></i>
-  <span v-html="$parent[bindTo]" />
+  <span v-html="$parent[bindTo] || content" />
 </div>
 </template>
 
@@ -15,11 +15,19 @@ export default {
       className: {
           type: String,
           default: "info"
+      },
+      content: {
+          type: String,
+          default: ""
       }
   },
   methods: {
       dismiss: function(){
-          this.$parent[this.bindTo] = "";
+          if (this.bindTo){
+            this.$parent[this.bindTo] = "";
+          }
+
+          this.$emit("onClose");
       }
   }
 }

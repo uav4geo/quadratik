@@ -3,8 +3,10 @@
     <div class="header">
         {{ fund.title }}
     </div>
-    <div class="scrolling content">
-        <div class="ui grid stackable">
+    <div class="scrolling content" v-if="!showPayment">
+        <Message :content="error" @onClose="closeModal" className="warning" />
+
+        <div class="ui grid stackable" v-if="!error">
             <div class="eight wide column">
                 <PledgeAmountSelector 
                     title="Amount You Pledge" 
@@ -58,12 +60,30 @@
             </div>
         </div>
     </div>
+    <div class="scrolling content" v-else>
+        <Message bindTo="error" className="warning" />
+
+        <form id="payment-form">
+            <div ref="cardElement" id="card-element">
+                <!-- Elements will create input elements here -->
+            </div>
+
+            <!-- We'll put the error messages in this element -->
+            <div id="card-errors" role="alert"></div>
+
+            <button id="submit">Pay</button>
+        </form>
+    </div>
     <div class="actions">
         <div class="ui cancel left button large">
             Cancel
         </div>
-        <div class="ui primary right button large" :class="{disabled: !validForm()}">
+
+        <div v-if="!showPayment" class="ui primary right button large" :class="{disabled: !validForm() || loadingPaymentForm, loading: loadingPaymentForm}" @click="submitForm()">
             <i class="icon lock"></i> Pledge ${{ userFund.toLocaleString() }}
+        </div>
+        <div v-else class="ui primary right button large" @click="submitForm()">
+            <i class="check circle outline icon"></i> Confirm ${{ userFund.toLocaleString() }} Pledge
         </div>
     </div>
 </Modal>
@@ -71,19 +91,26 @@
 
 <script>
 import Modal from './Modal.vue';
+import Message from './Message.vue';
 import PledgeAmountSelector from './PledgeAmountSelector.vue';
+import $ from 'jquery';
+import {loadStripe} from '@stripe/stripe-js';
 
 export default {
   props: ['fund'],
   components: {
-      Modal, PledgeAmountSelector
+      Modal, PledgeAmountSelector, Message
   },
   data: function(){
       return {
+          error: "",
           userFund: 25,
           email: "",
           name: "",
           anonymous: false,
+          stripe_publishable_key: "",
+          loadingPaymentForm: false,
+          showPayment: false,
       }
   },
   mounted: function(){
@@ -94,6 +121,13 @@ export default {
                 onUnchecked: () => this.anonymous = false,
             });
         });
+
+        $.getJSON("/r/stripe_publishable_key", json => {
+            this.stripe_publishable_key = json.key;
+
+            // TODO REMOVE
+            this.submitForm();
+        }).fail(() => this.error = "Cannot process payments at this moment. Please contact support");
   },
   computed: {
       poolFundAmount: function(){
@@ -119,7 +153,54 @@ export default {
 
       validForm: function(){
           return this.validEmail(this.email) && this.email !== "" && 
-                (this.name !== "" || this.anonymous);
+                (this.name !== "" || this.anonymous) &&
+                this.stripe_publishable_key !== "";
+      },
+
+      closeModal: function(){
+        $(this.$el).modal('hide');
+      },
+
+      submitForm: async function(){
+        this.loadingPaymentForm = true;
+        const onError = () => {
+            this.loadingPaymentForm = false;
+            this.error = "Cannot process payment. Please try again later or contact support";
+        };
+
+        try{
+            const stripe = await loadStripe(this.stripe_publishable_key);
+            
+            $.post("/r/pledge/intent", {
+            //       name: this.userName().
+            //       email: this.email,
+                amount: this.userFund * 100
+            }).done(json => {
+                if (json.error){
+                    onError();
+                    return;
+                }
+
+                this.loadingPaymentForm = false;
+                this.showPayment = true;
+
+                this.$nextTick(() => {
+                    // Set up Stripe.js and Elements to use in checkout form
+                    const style = {
+                        base: {
+                            color: "#32325d",
+                        }
+                    };
+                    const elements = stripe.elements();
+                    const card = elements.create("card", { style: style });
+                    card.mount(this.$refs.cardElement);
+                });
+            }).fail(onError);
+        }catch(e){
+            onError();
+        }
+
+
       }
   }
 
