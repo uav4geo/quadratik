@@ -44,7 +44,7 @@
                         <div class="fields">
                             <div class="eight wide field">
                                 <label>Name</label>
-                                <input type="text" v-model="name" placeholder="Your name, nickname or company name" />
+                                <input type="text" v-model="name" placeholder="Your name or company name" />
                             </div>
                             <div class="eight wide field" :class="{error: !validEmail(email)}">
                                 <label>E-mail</label>
@@ -137,6 +137,9 @@ export default {
                     const style = {
                         base: {
                             color: "#32325d",
+                            '::placeholder': {
+                                color: '#d4d4d4',
+                            },
                         }
                     };
                     const elements = stripe.elements();
@@ -161,11 +164,6 @@ export default {
 
       totalPledgeValue: function(){
           return this.userFund * 1 + this.poolFundAmount;
-      },
-
-      userName: function(){
-          if (this.anonymous) return "Anonymous";
-          return this.name;
       }
   },
   methods: {
@@ -190,39 +188,51 @@ export default {
       },
 
       submitForm: function(){
-          this.processingPayment = true;
+        this.processingPayment = true;
 
-          this.stripe.createToken(this.card).then(res => {
-              const onError = (msg) => {
-                  this.paymentError = msg || "Cannot communicate with payment processor. Try again later or contact support";
-                  this.processingPayment = false;
-              };
+        const onError = (msg) => {
+            this.paymentError = msg || "Cannot communicate with payment processor. Try again later or contact support";
+            this.processingPayment = false;
+        };
 
-              if (res.error){
-                  onError(res.error.message);
-                  return;
-              }
+        $.post("/r/pledge", {
+            name: this.name,
+            email: this.email,
+            fund_id: this.fund.id
+        }).done(json => {
+            if (json.error || !json.client_secret){
+                onError();
+                return;
+            }
 
-              if (!res.token){
-                  onError();
-                  return;
-              }
+            const token = json.token;
 
-              this.processingPayment = false;
-              $.post("/pledge", {
-                  name: this.userName(),
-                  email: this.email,
-                  token: res.token.id,
-                  fundId: fund.id
-              }).done(json => {
-                  if (json.error){
-                      onError();
-                      return;
-                  }
+            this.stripe.confirmCardSetup(json.client_secret, {
+                payment_method: {
+                    card: this.card,
+                    billing_details: {
+                        name: this.name,
+                    },
+                },
+            }).then(result => {
+                if (result.error) {
+                    onError(result.error);
+                    return;
+                }
 
+                $.post("/r/pledge/commit", {
+                    token
+                }).done(json => {
+                    if (json.error){
+                        onError(json.error);
+                        return;
+                    }
 
-              }).fail(onError);
-          });
+                    // YAY
+                    this.processingPayment = false;
+                }).fail(onError);
+            });
+        }).fail(onError);
       }
   }
 
@@ -242,5 +252,10 @@ i.icon.user{
 .payment{
     margin-top: 16px;
     margin-bottom: 16px;
+}
+.StripeElement{
+    border: 1px solid #dededf;
+    border-radius: 3px;
+    padding: 10px;
 }
 </style>

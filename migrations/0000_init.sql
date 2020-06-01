@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS "pledges" (
 	"amount"	REAL NOT NULL,
 	"name"	TEXT DEFAULT "",
 	"email"	TEXT DEFAULT "",
-    "fund_id"	INTEGER NOT NULL
+    "fund_id"	INTEGER NOT NULL,
+    "stripe_customer_id"	TEXT
 );
 
 CREATE INDEX IF NOT EXISTS "fund_id_fk" ON "pledges" (

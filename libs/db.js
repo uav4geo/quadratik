@@ -38,5 +38,11 @@ module.exports = {
     api: router,
     fetchOne: function(query, ...params){
         return db.prepare(query).get(...params);
+    },
+
+    addPledge: function(pledge){
+        const stmt = db.prepare(`INSERT INTO pledges
+        VALUES (@amount, @name, @email, @fund_id, @stripe_customer_id)`);
+        stmt.run(pledge);
     }
 }
