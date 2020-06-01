@@ -11,7 +11,16 @@
             <div class="ui text loader">Loading</div>
         </div>
         <div v-else>
-            <div class="ui grid stackable" v-if="!error">
+            <div v-if="!error && pledged" class="ui icon positive message">
+            <i class="check circle outline icon"></i>
+            <div class="content">
+                <div class="header">
+                Yay! You pledged ${{ pledged.amount.toLocaleString() }}.
+                </div>
+                <p>It pays off to get others to join your pledge. Invite other people to pledge to increase the amount of the subsidy pool and reach the funding goal faster.</p>
+            </div>
+            </div>
+            <div class="ui grid stackable" v-if="!error && !pledged">
                 <div class="eight wide column">
                     <PledgeAmountSelector 
                         title="Amount You Pledge" 
@@ -69,14 +78,17 @@
             </div>
         </div>
     </div>
-    <div class="actions">
+    <div class="actions" v-if="!pledged">
         <div class="ui cancel left button large">
             Cancel
         </div>
-        <!--<button class="ui primary right button large" id="submit"> <i class="icon lock"></i> Pledge ${{ userFund.toLocaleString() }}</button>-->
-
         <div class="ui primary right button large" :class="{disabled: !validForm() || processingPayment, loading: processingPayment}" @click="submitForm()">
             <i class="icon lock"></i> Pledge ${{ userFund.toLocaleString() }}
+        </div>
+    </div>
+    <div class="actions" v-else>
+        <div class="ui ok primary right button large">
+           Close
         </div>
     </div>
 </Modal>
@@ -106,7 +118,8 @@ export default {
           stripe: null,
           stripe_publishable_key: "",
           loading: true,
-          processingPayment: false
+          processingPayment: false,
+          pledged: null
       }
   },
   mounted: function(){
@@ -189,6 +202,8 @@ export default {
 
       submitForm: function(){
         this.processingPayment = true;
+        this.error = "";
+        this.paymentError = "";
 
         const onError = (msg) => {
             this.paymentError = msg || "Cannot communicate with payment processor. Try again later or contact support";
@@ -198,6 +213,7 @@ export default {
         $.post("/r/pledge", {
             name: this.name,
             email: this.email,
+            amount: this.userFund,
             fund_id: this.fund.id
         }).done(json => {
             if (json.error || !json.client_secret){
@@ -228,7 +244,12 @@ export default {
                         return;
                     }
 
-                    // YAY
+                    if (!json.pledged){
+                        onError("Invalid response from commit. Contact support.");
+                        return;
+                    }
+
+                    this.pledged = json.pledged;
                     this.processingPayment = false;
                 }).fail(onError);
             });

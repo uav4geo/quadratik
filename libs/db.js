@@ -41,7 +41,7 @@ module.exports = {
     },
 
     addPledge: function(pledge){
-        const stmt = db.prepare(`INSERT INTO pledges
+        const stmt = db.prepare(`INSERT INTO pledges (amount, name, email, fund_id, stripe_customer_id)
         VALUES (@amount, @name, @email, @fund_id, @stripe_customer_id)`);
         stmt.run(pledge);
     }

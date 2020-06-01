@@ -14,7 +14,10 @@ router.get('/stripe_publishable_key', (req, res) => {
 
 router.post('/pledge', async (req, res) => {
     try{
-        const { email, name, fund_id, amount } = req.body;
+        let { email, name, fund_id, amount } = req.body;
+        amount = parseFloat(amount);
+        fund_id = parseInt(fund_id);
+
         const customer = await stripe.customers.create({
             email,
             name,
@@ -45,6 +48,7 @@ router.post('/pledge', async (req, res) => {
 router.post('/pledge/commit', (req, res) => {
     const { token } = req.body;
     const pledge = pledgeTokens[token];
+    console.log(pledge);
     if (!pledge){
         res.json({error: "Invalid pledge token."});
         return;
@@ -53,6 +57,7 @@ router.post('/pledge/commit', (req, res) => {
     try{
         db.addPledge(pledge);
         delete(pledgeTokens[token]);
+        res.json({pledged: pledge});
     }catch(e){
         res.json({error: e.message});
     }
