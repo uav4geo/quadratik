@@ -11,15 +11,18 @@ router.get('/stripe_publishable_key', (req, res) => {
     res.json({key: config.getStripeKeys().publishable_key});
 });
 
-router.post('/pledge/intent', async (req, res) => {
+router.post('/pledge', async (req, res) => {
     try{
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: req.body.amount,
-            currency: 'usd',
-            // Verify your integration in this guide by including this parameter
-            metadata: {integration_check: 'accept_a_payment'},
+        const { email, name, fundId } = req.body;
+        const customer = await stripe.customers.create({
+            email,
+            name,
+            metadata: { 
+                fundId,
+                dateTime: new Date().toISOString()
+            }
         });
-    
+
         res.json({client_secret: paymentIntent.client_secret});
     }catch(e){
         res.json({error: e.message});
