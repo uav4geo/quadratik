@@ -24,11 +24,11 @@
     </div>
 
     <p>In software, although making copies of a software is virtually cost-free, the time contributors spend on an open-source project is finite. Any successful open-source project will often run out of developer time, unless the project finds a way to grow in a sustainable manner.</p>
-    <p>Growth is often achieved by relying on large entities sponsoring for developers' time and/or relying on the efforts of individual volunteers. This is less than ideal because it places the sponsors in a position of too much power, reduces the influence of the community and places unfair burden on the volunteers (unpaid work).</p>
+    <p>Growth is often achieved by relying on large entities sponsoring for developers' time and/or relying on the efforts of individual volunteers. This is less than ideal because it places the sponsors in a position of too much power, reduces the ability of the community to steer the project and places unfair burden on the volunteers with unpaid work.</p>
 
-    <p>Existing funraising systems (eg. Indiegogo, Patreon and others) work as "pre-sale" or "exclusive access" platforms (bakers usually receive certain exclusive benefits for their pledges). These platforms have accomplished some successes, but rely on often exclusive transfers of value between bakers and content creators, which might be incompatible with open-source philosophy.
+    <p>Existing funraising systems (eg. Indiegogo, Patreon and others) work as "pre-sale" or "exclusive access" platforms (backers usually receive certain exclusive benefits for their pledges). These platforms have accomplished some successes, but often rely on exclusive transfers of value between backers and content creators, which might be incompatible with open-source philosophy.
 
-    <h4>Quadratic Funding To The Rescue</h4>
+    <h4>Quadratic Funding</h4>
 
     <p>When a fund is started, we designate a pool sponsor for the fund. The pool sponsor can be either the developer itself or an organization that has the financial resources to act as a sponsor. The purpose of the pool sponsor is to compensate for the additional value that a pledge from one user generates for everyone else.</p>
     <p>Every time a pledge is made from a community user, the system takes the square root of each pledge, sums them up and squares the result (thus the term <i>quadratic</i>):</p>
@@ -68,7 +68,7 @@
     
     <p>You can prove mathematically that this subsidy optimally compensates for the value that Bob and Alice place into the fund, considering that Bob's pledge increases the value of Alice's and vice-versa.</p>
 
-    <p>It follows that more pledges lead to more overall value. <strong>The subsidy pool makes it is economically advantageous for both Bob and Alice to pledge</strong>.
+    <p>It follows that more pledges lead to more overall value. <strong>The subsidy pool makes it economically advantageous for both Bob and Alice to pledge</strong>.
     
     <h4>Examples:</h4>
     <ul>

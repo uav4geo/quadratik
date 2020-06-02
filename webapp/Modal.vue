@@ -16,6 +16,7 @@ export default {
       show: function(){
         $(this.$refs.modal).modal({
                 duration: 200,
+                closable: false,
                 onHide: () => {
                     this.$emit('onClose', false);
                 },
