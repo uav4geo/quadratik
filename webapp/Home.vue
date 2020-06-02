@@ -2,7 +2,7 @@
 <div id="home">
     <Message bindTo="error" className="warning" />
 
-    <SubsidyCalculator v-if="showCalculator" :fund="selectedFund" @onClose="closeCalculator" />
+    <SubsidyCalculatorModal v-if="showCalculator" :fund="selectedFund" @onClose="closeCalculator" />
     <PledgeCheckout v-if="showCheckout" :fund="selectedFund" @onClose="closeCheckout" />
     <PledgeList v-if="showPledgeList" :fund="selectedFund" @onClose="closePledgeList" />
 
@@ -106,13 +106,13 @@ import $ from 'jquery';
 import Message from './Message.vue';
 import Markdown from './Markdown.vue';
 import Fund from './libs/fund';
-import SubsidyCalculator from './SubsidyCalculator.vue';
+import SubsidyCalculatorModal from './SubsidyCalculatorModal.vue';
 import PledgeCheckout from './PledgeCheckout.vue';
 import PledgeList from './PledgeList.vue';
 
 export default {
   components: {
-    Message, Markdown, SubsidyCalculator, PledgeCheckout, PledgeList
+    Message, Markdown, SubsidyCalculatorModal, PledgeCheckout, PledgeList
   },
   data: function(){
       return {
@@ -129,7 +129,7 @@ export default {
       $.getJSON("/r/funds", res => {
           this.funds = res.map(f => new Fund(f));
         //   this.openCalculator(this.funds[0]);
-        this.openCheckout(this.funds[0]);
+        // this.openCheckout(this.funds[0]);
 
           let hasExpiry = this.funds.find(f => f.expires) !== undefined;
           if (hasExpiry){
