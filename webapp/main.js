@@ -2,13 +2,16 @@ import './css/main.scss';
 import Home from './Home.vue';
 import Tos from './Tos.vue';
 import HowItWorks from './HowItWorks.vue';
-
+import CreateFund from './CreateFund.vue';
+import Contact from './Contact.vue';
 
 window.addEventListener('DOMContentLoaded', () => {
     const routes = [
         { path: '/', component: Home },
         { path: '/tos', component: Tos },
-        { path: '/howitworks', component: HowItWorks }
+        { path: '/howitworks', component: HowItWorks },
+        { path: '/createfund', component: CreateFund },
+        { path: '/contact', component: Contact }
     ];
 
     const router = new VueRouter({

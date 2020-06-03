@@ -22,7 +22,69 @@
         <div v-for="fund in funds" class="ui relaxed divided list">
             <div class="item">
                 <div class="ui grid stackable">
-                    <div class="nine wide column">
+                    <div class="sixteen wide column">
+                        <div class="text-center details">
+                                <div class="ui primary button large" data-position="top center" data-content="Funded by community">
+                                    ${{ fund.communityFundAmount() }}
+                                </div> <i class="icon plus"></i>
+                                <div class="ui green button large" data-position="top center" data-content="Funded by subsidy pool">
+                                    ${{ fund.poolFundAmount() }}
+                                </div>
+                                <hr/>
+                                <div class="total">${{ fund.totalFundAmount() }}</div>
+                                
+                                <div class="ui progress green" :data-percent="Math.min(100, fund.percentageFunded())" ref="funding_progress">
+                                    <div class="bar"></div>
+                                    <div class="label">{{ fund.percentageFunded() }}% funded</div>
+                                </div>
+
+                                <table class="ui very basic celled table">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <i class="icon clock" data-position="top center" data-content="Time Left"></i>
+                                                {{ fund.getCountdown() }}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div><i class="icon flag checkered" data-position="top center" data-content="Funding Goal"></i> ${{ fund.goal.toLocaleString() }}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <i class="icon balance scale" data-position="top center" data-content="Type of Funding"></i> 
+                                                <span data-position="top center" :data-content="fund.typeDescription()">{{ fund.typeLabel() }}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div><a href="javascript:void(0)" @click="openPledgeList(fund)"><i class="icon users" data-position="top center" data-content="People who pledged"></i> {{ fund.pledges.length }}</a></div>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="fund.sponsor_name">
+                                        <td>
+                                            <div><i class="icon heart" data-position="top center" data-content="Subsidy Pool Sponsor"></i> <a :href="fund.sponsor_url" target="_blank">{{ fund.sponsor_name }}</a></div>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="fund.developer_name">
+                                        <td>
+                                            <div><i class="icon wrench" data-position="top center" data-content="Developer"></i> <a :href="fund.developer_url" target="_blank">{{ fund.developer_name }}</a></div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="ui buttons">
+                                    <button class="ui button" @click="openCalculator(fund)"><i class="icon calculator"></i> Calculate Subsidy</button>
+                                <div class="or"></div>
+                                    <button class="ui button primary" @click="openCheckout(fund)"><i class="icon dollar"></i> Pledge</button>
+                                </div>
+                        </div>
                         <a class="header" :href="fund.url" target="_blank">
                             <i class="large github icon"></i>
                             {{ fund.title }}
@@ -30,68 +92,6 @@
                         <div class="description">
                             <Markdown>{{ fund.description }}</Markdown>
                         </div>
-                    </div>
-                    <div class="seven wide column text-center">
-                            <div class="ui primary button large" data-position="top center" data-content="Funded by community">
-                                ${{ fund.communityFundAmount() }}
-                            </div> <i class="icon plus"></i>
-                            <div class="ui green button large" data-position="top center" data-content="Funded by subsidy pool">
-                                ${{ fund.poolFundAmount() }}
-                            </div>
-                            <hr/>
-                            <div class="total">${{ fund.totalFundAmount() }}</div>
-                            
-                            <div class="ui progress green" :data-percent="Math.min(100, fund.percentageFunded())" ref="funding_progress">
-                                <div class="bar"></div>
-                                <div class="label">{{ fund.percentageFunded() }}% funded</div>
-                            </div>
-
-                            <table class="ui very basic celled table">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <i class="icon clock" data-position="top center" data-content="Time Left"></i>
-                                            {{ fund.getCountdown() }}
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div><i class="icon flag checkered" data-position="top center" data-content="Funding Goal"></i> ${{ fund.goal.toLocaleString() }}</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <i class="icon balance scale" data-position="top center" data-content="Type of Funding"></i> 
-                                            <span data-position="top center" :data-content="fund.typeDescription()">{{ fund.typeLabel() }}</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div><a href="javascript:void(0)" @click="openPledgeList(fund)"><i class="icon users" data-position="top center" data-content="People who pledged"></i> {{ fund.pledges.length }}</a></div>
-                                    </td>
-                                </tr>
-                                <tr v-if="fund.sponsor_name">
-                                    <td>
-                                        <div><i class="icon heart" data-position="top center" data-content="Subsidy Pool Sponsor"></i> <a :href="fund.sponsor_url" target="_blank">{{ fund.sponsor_name }}</a></div>
-                                    </td>
-                                </tr>
-                                <tr v-if="fund.developer_name">
-                                    <td>
-                                        <div><i class="icon wrench" data-position="top center" data-content="Developer"></i> <a :href="fund.developer_url" target="_blank">{{ fund.developer_name }}</a></div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                            <div class="ui buttons">
-                                <button class="ui button" @click="openCalculator(fund)"><i class="icon calculator"></i> Calculate Subsidy</button>
-                            <div class="or"></div>
-                                <button class="ui button primary" @click="openCheckout(fund)"><i class="icon dollar"></i> Pledge</button>
-                            </div>
                     </div>
                 </div>
             </div>
@@ -183,6 +183,11 @@ export default {
 <style scoped>
 .description{
     margin-bottom: 8px;
+}
+.details{
+    float: right;
+    margin-left: 32px;
+    margin-bottom: 32px;
 }
 .total{
     margin-top: 12px;

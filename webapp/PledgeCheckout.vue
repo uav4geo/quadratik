@@ -15,9 +15,9 @@
             <i class="check circle outline icon"></i>
             <div class="content">
                 <div class="header">
-                Yay! You pledged ${{ pledged.amount.toLocaleString() }}.
+                Yay! You pledged ${{ pledged.amount.toLocaleString() }}
                 </div>
-                <p>It pays off to get others to join your pledge. Invite other people to pledge to increase the amount of the subsidy pool and reach the funding goal faster.</p>
+                <p>Invite other people to pledge to reach the funding goal faster.</p>
             </div>
             </div>
             <div class="ui grid stackable" v-if="!error && !pledged">
@@ -52,11 +52,11 @@
                         <h3 class="ui dividing header">Your Details</h3>
                         <div class="fields">
                             <div class="eight wide field">
-                                <label>Name</label>
+                                <label>Name <i class="icon info circle" data-position="right center" data-content="This will public. You don't have to use your real name if you want to remain anonymous."></i></label>
                                 <input type="text" v-model="name" placeholder="Your name or company name" />
                             </div>
                             <div class="eight wide field" :class="{error: !validEmail(email)}">
-                                <label>E-mail</label>
+                                <label>E-mail <i class="icon info circle" data-position="right center" data-content="This will be kept confidential. We will send invoices and updates regarding the fund to this e-mail address and to contact you if there are problems with payment."></i></label>
                                 <input type="text" v-model="email" placeholder="E-mail address" />
                             </div>
                         </div>
@@ -79,7 +79,7 @@
         </div>
     </div>
     <div class="actions" v-if="!pledged">
-        <div class="ui cancel left button large">
+        <div class="ui cancel left button large" :class="{disabled: processingPayment}">
             Cancel
         </div>
         <div class="ui primary right button large" :class="{disabled: !validForm() || processingPayment, loading: processingPayment}" @click="submitForm()">
@@ -124,7 +124,9 @@ export default {
   },
   mounted: function(){
         this.$nextTick(() => {
-            $(this.$el).find('[data-content]').popup({inline: true});
+            setTimeout(() => {
+                $(this.$el).find('[data-content]').popup({inline: true});
+            }, 300);
         });
 
         const onError = () => {
@@ -232,7 +234,11 @@ export default {
                 },
             }).then(result => {
                 if (result.error) {
-                    onError(result.error);
+                    if (result.error.code){
+                        onError(`The payment processor declined the transaction with the code: ${result.error.code}`);
+                    }else{
+                        onError(result.error);
+                    }
                     return;
                 }
 
@@ -251,6 +257,7 @@ export default {
 
                     this.pledged = json.pledged;
                     this.processingPayment = false;
+                    this.fund.pledges.push(this.pledged);
                 }).fail(onError);
             });
         }).fail(onError);
