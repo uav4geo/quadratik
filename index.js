@@ -30,6 +30,7 @@ if (production){
     require("greenlock-express")
         .init({
             packageRoot: __dirname,
+            maintainerEmail: "nobody@example.com",
             configDir: "./greenlock.d",
             cluster: false
         })
