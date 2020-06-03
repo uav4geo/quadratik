@@ -12,7 +12,7 @@
 
     <h4>The Problem</h4>
 
-    <p>Raising funds for public goods (eg. open source software) <a href="https://www.investopedia.com/terms/t/tragedy-of-the-commons.asp" target="_blank">is difficult</a>:</p>
+    <p>Raising funds for public goods (e.g. open source software) <a href="https://www.investopedia.com/terms/t/tragedy-of-the-commons.asp" target="_blank">is difficult</a>:</p>
 
     <div class="ui icon message">
     <i class="icon quote right"></i>
@@ -26,7 +26,7 @@
     <p>In software, although making copies of a software is virtually cost-free, the time contributors spend on an open-source project is finite. Any successful open-source project will often run out of developer time, unless the project finds a way to grow in a sustainable manner.</p>
     <p>Growth is often achieved by relying on large entities sponsoring for developers' time and/or relying on the efforts of individual volunteers. This is less than ideal because it places the sponsors in a position of too much power, reduces the ability of the community to steer the project and places unfair burden on the volunteers with unpaid work.</p>
 
-    <p>Existing funraising systems (eg. Indiegogo, Patreon and others) work as "pre-sale" or "exclusive access" platforms (backers usually receive certain exclusive benefits for their pledges). These platforms have accomplished some successes, but don't address the economic disincentive of people contributing to a common good. They also often rely on exclusive transfers of value between backers and content creators, which might be incompatible with the open-source philosophy of sharing.
+    <p>Existing funraising systems (e.g. Indiegogo, Patreon and others) work as "pre-sale" or "exclusive access" platforms (backers usually receive certain exclusive benefits for their pledges). These platforms have accomplished some successes, but don't address the economic disincentive of people contributing to a common good. They also often rely on exclusive transfers of value between backers and content creators, which might be incompatible with the open-source philosophy of sharing.
 
     <h4>Quadratic Funding</h4>
 
