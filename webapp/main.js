@@ -20,6 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }else{
         routes = [
             { path: '/', component: Home },
+            { path: '/fund/:id', component: Home },
             { path: '/tos', component: Tos },
             { path: '/howitworks', component: HowItWorks },
             { path: '/createfund', component: CreateFund },

@@ -26,6 +26,7 @@
     "babel-loader": "^8.1.0",
     "better-sqlite3": "^7.0.1",
     "body-parser": "^1.19.0",
+    "clipboard-copy": "^3.1.0",
     "css-loader": "^3.5.3",
     "express": "^4.17.1",
     "file-loader": "^6.0.0",

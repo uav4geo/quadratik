@@ -22,6 +22,12 @@ migrations.forEach(m => {
 });
 
 router.get("/funds", (req, res) => {
+    let where = '';
+    if (req.query.id){
+        where = `WHERE f.id = ${parseInt(req.query.id)}`;
+        console.log(where);
+    }
+
     res.json(db.prepare(`
     SELECT f.*,
     CASE COUNT(p.id)
@@ -31,6 +37,7 @@ router.get("/funds", (req, res) => {
     FROM funds f
     LEFT OUTER JOIN pledges p
     ON p.fund_id = f.id
+    ${where}
     GROUP BY f.id`).all().map(r => (r.pledges = JSON.parse(r.pledges), r)));
 });
 

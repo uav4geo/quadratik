@@ -6,11 +6,7 @@
     <PledgeCheckout v-if="showCheckout" :fund="selectedFund" @onClose="closeCheckout" />
     <PledgeList v-if="showPledgeList" :fund="selectedFund" @onClose="closePledgeList" />
 
-    <div v-if="loading" class="text-center">
-        <i class="circle notch icon loading"></i>
-    </div>
-    <div v-else>
-        <div class="ui icon message">
+    <div class="ui icon message">
         <i class="lightbulb outline icon"></i>
         <div class="content">
             <div class="header">
@@ -18,7 +14,12 @@
             </div>
             <p>More people pledging = more subsidies. Discover <router-link to="/howitworks">quadratic funding</router-link>.</p>
         </div>
-        </div>
+    </div>
+
+    <div v-if="loading" class="text-center">
+        <i class="circle notch icon loading"></i>
+    </div>
+    <div v-else>
         <div v-for="fund in funds" class="ui relaxed divided list">
             <div class="item">
                 <div class="ui grid stackable">
@@ -92,6 +93,10 @@
                         <div class="description">
                             <Markdown>{{ fund.description }}</Markdown>
                         </div>
+
+                        <div class="share-fund">
+                            <ShareFund :fund="fund" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,10 +114,20 @@ import Fund from './libs/fund';
 import SubsidyCalculatorModal from './SubsidyCalculatorModal.vue';
 import PledgeCheckout from './PledgeCheckout.vue';
 import PledgeList from './PledgeList.vue';
+import ShareFund from './ShareFund.vue';
+
+const serialize = function(obj) {
+    let str = [];
+    for (let p in obj)
+        if (obj.hasOwnProperty(p)) {
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        }
+    return str.join("&");
+};
 
 export default {
   components: {
-    Message, Markdown, SubsidyCalculatorModal, PledgeCheckout, PledgeList
+    Message, Markdown, SubsidyCalculatorModal, PledgeCheckout, PledgeList, ShareFund
   },
   data: function(){
       return {
@@ -126,7 +141,12 @@ export default {
       }
   },
   mounted: function(){
-      $.getJSON("/r/funds", res => {
+      const query = {};
+      if (this.$route.params.id){
+          query.id = this.$route.params.id;
+      }
+
+      $.getJSON(`/r/funds?${serialize(query)}`, res => {
           this.funds = res.map(f => new Fund(f));
         //   this.openCalculator(this.funds[0]);
         // this.openCheckout(this.funds[0]);
@@ -188,6 +208,10 @@ export default {
     float: right;
     margin-left: 32px;
     margin-bottom: 32px;
+}
+.share-fund{
+    margin-top: 8px;
+    text-align: right;
 }
 .total{
     margin-top: 12px;

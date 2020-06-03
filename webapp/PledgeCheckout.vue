@@ -11,14 +11,19 @@
             <div class="ui text loader">Loading</div>
         </div>
         <div v-else>
-            <div v-if="!error && pledged" class="ui icon positive message">
-            <i class="check circle outline icon"></i>
-            <div class="content">
-                <div class="header">
-                Yay! You pledged ${{ pledged.amount.toLocaleString() }}
+            <div v-if="!error && pledged">
+                <div class="ui icon positive message">
+                    <i class="check circle outline icon"></i>
+                    <div class="content">
+                        <div class="header">
+                        Success! You pledged ${{ pledged.amount.toLocaleString() }} and received a ${{ poolFundAmount.toLocaleString() }} subsidy!
+                        </div>
+                        <p>While you wait for the funding goal to be reached, you can invite other people to pledge. Because of quadratic funding, more pledges = more subsidies!</p>
+                    </div>
                 </div>
-                <p>Invite other people to pledge to reach the funding goal faster.</p>
-            </div>
+                <div class="share-fund">
+                    <ShareFund :fund="fund" />
+                </div>
             </div>
             <div class="ui grid stackable" v-if="!error && !pledged">
                 <div class="eight wide column">
@@ -99,12 +104,13 @@ import Modal from './Modal.vue';
 import Message from './Message.vue';
 import PledgeAmountSelector from './PledgeAmountSelector.vue';
 import $ from 'jquery';
+import ShareFund from './ShareFund.vue';
 import {loadStripe} from '@stripe/stripe-js';
 
 export default {
   props: ['fund'],
   components: {
-      Modal, PledgeAmountSelector, Message
+      Modal, PledgeAmountSelector, Message, ShareFund
   },
   data: function(){
       return {
@@ -268,6 +274,9 @@ export default {
 </script>
 
 <style scoped>
+.share-fund{
+    text-align: center;
+}
 table{
     user-select: none;
 }
