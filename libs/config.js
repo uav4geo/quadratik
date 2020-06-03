@@ -5,6 +5,10 @@ module.exports = {
         return (db.fetchOne('SELECT value FROM config WHERE key = ?', key) || {}).value;
     },
 
+    isFirstTimeSetup: function(){
+        return this.get("is_live") === undefined;
+    },
+
     isTestMode: function(){
         return this.get("is_live") !== "true";
     },
@@ -13,6 +17,6 @@ module.exports = {
         let type = this.isTestMode() ? 'test' : 'live';
         return db.fetchOne(`SELECT a.value AS secret_key, b.value as publishable_key FROM config a 
                             JOIN config b
-                            WHERE a.key = 'stripe_${type}_secret_key' AND b.key='stripe_${type}_publishable_key'`);
+                            WHERE a.key = 'stripe_${type}_secret_key' AND b.key='stripe_${type}_publishable_key'`) || {};
     }
 }

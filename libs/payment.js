@@ -1,5 +1,5 @@
 const config = require('./config');
-const stripe = require('stripe')(config.getStripeKeys().secret_key);
+const stripeLib = require('stripe');
 const express = require('express');
 const db = require('./db');
 const router = express.Router();
@@ -14,6 +14,7 @@ router.get('/stripe_publishable_key', (req, res) => {
 
 router.post('/pledge', async (req, res) => {
     try{
+        const stripe = stripeLib(config.getStripeKeys().secret_key);
         let { email, name, fund_id, amount } = req.body;
         amount = parseFloat(amount);
         fund_id = parseInt(fund_id);

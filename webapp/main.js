@@ -6,17 +6,23 @@ import CreateFund from './CreateFund.vue';
 import Contact from './Contact.vue';
 
 window.addEventListener('DOMContentLoaded', () => {
-    const routes = [
-        { path: '/', component: Home },
-        { path: '/tos', component: Tos },
-        { path: '/howitworks', component: HowItWorks },
-        { path: '/createfund', component: CreateFund },
-        { path: '/contact', component: Contact }
-    ];
+    let routes;
 
-    const router = new VueRouter({
-        routes // short for `routes: routes`
-    });
+    if (window.appInfo.firstTimeSetup){
+        routes = [
+            { path: '/', component: FirstTimeSetup },
+        ];
+    }else{
+        routes = [
+            { path: '/', component: Home },
+            { path: '/tos', component: Tos },
+            { path: '/howitworks', component: HowItWorks },
+            { path: '/createfund', component: CreateFund },
+            { path: '/contact', component: Contact }
+        ];
+    }
+    
+    const router = new VueRouter({ routes });
 
     new Vue({
         router
