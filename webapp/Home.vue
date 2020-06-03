@@ -210,8 +210,8 @@ export default {
     margin-bottom: 32px;
 }
 .share-fund{
-    margin-top: 8px;
-    text-align: right;
+    margin-top: 12px;
+    text-align: center;
 }
 .total{
     margin-top: 12px;
