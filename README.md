@@ -4,12 +4,12 @@ Free and open source software for easy quadratic funding using Stripe and no add
 
 ![image](https://user-images.githubusercontent.com/1951843/83590715-5f083300-a524-11ea-84eb-5b0e1386d73c.png)
 
-## What's Quadratic Funding
+## What is quadratic funding
 
 tldr; it's not economically advantageous for people to directly fund open-source software. We make it advantageous by combining each pledge with additional funds from a sponsor pool. The additional funds optimally compensate for the value a pledge benefits other users.
 Example: if Bob makes a contribution ($25) for something that could be valuable to Alice, Bob needs to be compensated for the additional benefit that Alice gets ($25). So Bob's pledge needs to be worth $50. More pledges lead to more overall value for everyone involved, making it economically advantageous for both Bob and Alice to pledge.
 
-### The Problem
+### The problem
 
 Raising funds for public goods (e.g. open source software) [is difficult](https://www.investopedia.com/terms/t/tragedy-of-the-commons.asp):
 
@@ -21,7 +21,7 @@ Growth is often achieved by relying on large entities sponsoring for developers'
 
 Existing funraising systems (eg. Indiegogo, Patreon and others) work as "pre-sale" or "exclusive access" platforms (backers usually receive certain exclusive benefits for their pledges). These platforms have accomplished some successes, but don't address the economic disincentive of people contributing to a common good. They also often rely on exclusive transfers of value between backers and content creators, which might be incompatible with the open-source philosophy of sharing.
 
-### Quadratic Funding
+### Quadratic funding
 
 When a fund is started, we designate a pool sponsor for the fund. The pool sponsor can be either the developer itself or an organization that has the financial resources to act as a sponsor. The purpose of the pool sponsor is to compensate for the additional value that a pledge from one user generates for everyone else.
 
@@ -50,6 +50,8 @@ Extract the source code in a directory, then from the directory:
 
 ```bash
 npm install
+npm install -g webpack
+webpack
 node index.js
 ```
 
