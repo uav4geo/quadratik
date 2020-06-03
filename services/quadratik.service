@@ -4,9 +4,9 @@ Description=Quadratik Service
 [Service]
 Type=simple
 PIDFile=/run/quadratik.pid
-User=quadratik
-Group=quadratik
-WorkingDirectory=/home/quadratik/quadratik
+User=root
+Group=root
+WorkingDirectory=/root/quadratik
 ExecStart=/usr/bin/node index.js --prod
 ExecStop=/bin/kill -s QUIT $MAINPID
 Restart=on-failure
