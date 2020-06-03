@@ -9,13 +9,15 @@ const argv = require('minimist')(process.argv.slice(2), {
     'default': {
         'port': 3000,
         'host': '0.0.0.0',
+        'production': false,
     },
     'alias': {
         'port': 'p',
-        'host': 'h'
+        'host': 'h',
+        'production': 'prod'
     }
 });
-const { port, host } = argv;
+const { port, host, production } = argv;
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -24,4 +26,14 @@ app.use('/r', db.api);
 app.use('/r', payment.api);
 app.use('/', info.api);
 
-app.listen(port, host, () => console.log(`Server listening on http://${host}:${port}`))
+if (production){
+    require("greenlock-express")
+        .init({
+            packageRoot: __dirname,
+            configDir: "./greenlock.d",
+            cluster: false
+        })
+        .serve(app);
+}else{
+    app.listen(port, host, () => console.log(`Server listening on http://${host}:${port}`))
+}
