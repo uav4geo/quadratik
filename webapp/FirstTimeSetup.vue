@@ -18,4 +18,7 @@ export default {
 </script>
 
 <style scoped>
+#fts{
+    margin-top: 32px;
+}
 </style>

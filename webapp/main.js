@@ -1,9 +1,12 @@
 import './css/main.scss';
+import $ from 'jquery';
 import Home from './Home.vue';
 import Tos from './Tos.vue';
 import HowItWorks from './HowItWorks.vue';
 import CreateFund from './CreateFund.vue';
 import Contact from './Contact.vue';
+import FirstTimeSetup from './FirstTimeSetup.vue';
+
 
 window.addEventListener('DOMContentLoaded', () => {
     let routes;
@@ -12,6 +15,8 @@ window.addEventListener('DOMContentLoaded', () => {
         routes = [
             { path: '/', component: FirstTimeSetup },
         ];
+
+        $(".main.menu").hide();
     }else{
         routes = [
             { path: '/', component: Home },
