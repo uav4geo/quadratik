@@ -1,6 +1,6 @@
 # Quadratik
 
-Free and open source software for easy quadratic funding using Stripe and no additional fees!
+Free and open source software for easy self-hosted quadratic funding.
 
 ![image](https://user-images.githubusercontent.com/1951843/83590715-5f083300-a524-11ea-84eb-5b0e1386d73c.png)
 
