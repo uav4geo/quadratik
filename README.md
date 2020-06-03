@@ -50,7 +50,7 @@ Extract the source code in a directory, then from the directory:
 
 ```bash
 npm install
-npm install -g webpack
+npm install -g webpack webpack-cli
 webpack
 node index.js
 ```
@@ -60,6 +60,8 @@ TODO: [Onboarding Setup](https://github.com/uav4geo/quadratik/issues/8). Current
 ![image](https://user-images.githubusercontent.com/1951843/83591193-611ec180-a525-11ea-8bc7-c615d14ac9b7.png)
 
 As well as entries for each `fund`.
+
+You will need to create an account with [Stripe](https://stripe.com) to accept payments and setup the `secret` and `publishable` API keys.
 
 The application should be available from your browser at http://localhost:3000.
 
