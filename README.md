@@ -72,3 +72,21 @@ We welcome contributions! If you want to add something, please open a pull reque
 ## Reporting Issues
 
 Please [open an issue](https://github.com/uav4geo/quadratik/issues) if you find a problem with the software.
+
+## FAQ
+
+### How does a pool sponsor predict how much they'll end up being committed to paying?
+
+You can use the formula:
+
+```python
+import math
+funding_goal = 4800
+minimum_pledge_per_user = 10
+max_sponsor_contribution = funding_goal - math.floor(1/2*(minimum_pledge_per_user + math.sqrt(4*funding_goal*minimum_pledge_per_user + minimum_pledge_per_user^2))/minimum_pledge_per_user) * minimum_pledge_per_user # --> 4580
+```
+
+This is in the unlikely event that everyone pitches in the minimum pledge amount.
+
+
+
