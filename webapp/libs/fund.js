@@ -46,6 +46,8 @@ class Fund{
     }
 
     timesup(){
+        if (!this.expires) return false;
+        
         const now = new Date().getTime();
         return new Date(this.expires) - now < 0;
     }

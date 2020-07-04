@@ -25,7 +25,11 @@ router.get("/funds", (req, res) => {
     let where = '';
     if (req.query.id){
         where = `WHERE f.id = ${parseInt(req.query.id)}`;
-        console.log(where);
+    }else if (req.query.expiredBefore){
+        where = `WHERE f.expires IS NOT NULL AND datetime(f.expires) < datetime('${new Date(req.query.expiredBefore).toISOString()}')`;
+    }else{
+        // Home
+        where = `WHERE f.expires IS NULL OR datetime(f.expires, '+10 days') > datetime('now')`;
     }
 
     res.json(db.prepare(`

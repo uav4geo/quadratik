@@ -1,6 +1,8 @@
 import './css/main.scss';
 import $ from 'jquery';
 import Home from './Home.vue';
+import Archive from './Archive.vue';
+import ViewFund from './ViewFund.vue';
 import Tos from './Tos.vue';
 import HowItWorks from './HowItWorks.vue';
 import CreateFund from './CreateFund.vue';
@@ -20,7 +22,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }else{
         routes = [
             { path: '/', component: Home },
-            { path: '/fund/:id', component: Home },
+            { path: '/fund/:id', component: ViewFund },
+            { path: '/archive', component: Archive },
             { path: '/tos', component: Tos },
             { path: '/howitworks', component: HowItWorks },
             { path: '/createfund', component: CreateFund },
