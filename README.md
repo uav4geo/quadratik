@@ -19,7 +19,7 @@ In software, although making copies of a software is virtually cost-free, the ti
 
 Growth is often achieved by relying on large entities sponsoring for developers' time and/or relying on the efforts of individual volunteers. This is less than ideal because it places the sponsors in a position of too much power, reduces the ability of the community to steer the project and places unfair burden on the volunteers with unpaid work.
 
-Existing funraising systems (eg. Indiegogo, Patreon and others) work as "pre-sale" or "exclusive access" platforms (backers usually receive certain exclusive benefits for their pledges). These platforms have accomplished some successes, but don't address the economic disincentive of people contributing to a common good. They also often rely on exclusive transfers of value between backers and content creators, which might be incompatible with the open-source philosophy of sharing.
+Existing fundraising systems (eg. Indiegogo, Patreon and others) work as "pre-sale" or "exclusive access" platforms (backers usually receive certain exclusive benefits for their pledges). These platforms have accomplished some successes, but don't address the economic disincentive of people contributing to a common good. They also often rely on exclusive transfers of value between backers and content creators, which might be incompatible with the open-source philosophy of sharing.
 
 ### Quadratic funding
 
